@@ -359,8 +359,7 @@ async function unlock(){var g=$("gerr"),p=$("pw"),e=$("aem");
 if(!sbOn()){g.textContent="The database is not connected yet. Add your Supabase settings to the site first.";return}
 try{var r=await fetch(SB.url+"/auth/v1/token?grant_type=password",{method:"POST",headers:{apikey:SB.key,"Content-Type":"application/json"},body:JSON.stringify({email:e.value.trim(),password:p.value})});
 var j=await r.json();p.value="";
-if(!r.ok||!j.access_token){g.textContent="Incorrect email or password.";return}
-ADMIN_TOKEN=j.access_token;g.textContent="";$("gate").hidden=true;$("dash").hidden=false;idle();atab("overview");await refreshAll()}
+if(!r.ok||!j.access_token){g.textContent=(j.error_description||j.msg||j.message||"Incorrect email or password.");return}ADMIN_TOKEN=j.access_token;g.textContent="";$("gate").hidden=true;$("dash").hidden=false;idle();atab("overview");await refreshAll()}
 catch(x){g.textContent="Could not reach the database."}}
 function lock(){ADMIN_TOKEN="";ROWS=[];KLOG=[];SV="list";clearTimeout(idleT);$("dash").hidden=true;$("gate").hidden=false;$("data").innerHTML="";$("sdata").innerHTML=""}
 function idle(){clearTimeout(idleT);if(ADMIN_TOKEN)idleT=setTimeout(function(){lock();$("gerr").textContent="Signed out after 15 minutes of inactivity."},9e5)}
